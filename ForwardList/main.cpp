@@ -5,7 +5,7 @@ using std::cout;
 using std::endl;
 
 #define tab "\t"
-#define delimiter "------------------------------------------------------------"
+#define delimiter "\n------------------------------------------------------------\n"
 
 class Element
 {
@@ -90,7 +90,6 @@ public:
 
 	void pop_back()
 	{
-		if (Head == nullptr) return;
 		if (Head->pNext == nullptr) return pop_front();
 		Element* Temp = Head;
 		while (Temp->pNext->pNext)
