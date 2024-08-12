@@ -11,45 +11,101 @@ class Element
 {
 	int Data;		// значение элемента
 	Element* pNext; // указатель на следующий элемент
+	static int count;
 public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
+		count++;
+#ifdef DEBUG
 		cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	~Element()
 	{
+		count--;
+#ifdef DEBUG
 		cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
 	}
 	friend class ForwardList;
 };
 
+int Element::count = 0;
+
 class ForwardList
 {
 	Element* Head;
+	unsigned int size;
 public:
 	ForwardList()
 	{
-		Head = nullptr; // Когда список пуст
+		Head = nullptr; // Когда список пуст, его голова указывает на 0
+		size = 0;
 		cout << "LConstructor:\t" << this << endl;
+	}
+	// Конструктор копирования
+	ForwardList(const ForwardList& other) :ForwardList()
+	{
+		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);*/
+		*this = other;	//здесь просто вызываем CopyAssignment
+		cout << "LCopyConstructor:" << this << endl;
+	}
+	// Конструктор перемещения
+	ForwardList(ForwardList&& other) noexcept : Head(other.Head), size(other.size)
+	{
+		other.Head = nullptr;
+		other.size = 0;
+		cout << "LMoveConstructor:\t" << this << endl;
 	}
 	~ForwardList()
 	{
 		while (Head) pop_front();
+		pop_back();
 		cout << "LDestructor:\t" << this << endl;
+	}
+
+	//					Operators:
+
+	// Оператор присваивания с копированием
+	ForwardList& operator=(const ForwardList& other)
+	{
+		if (this == &other) return *this;
+		while (Head) pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+		cout << "LCopyAssignment:\t" << this << endl;
+		return *this;
+	}
+	// Оператор присваивания с перемещением
+	ForwardList& operator=(ForwardList&& other) noexcept
+	{
+		if (this == &other) return *this;
+		while (Head) pop_front();
+		Head = other.Head;
+		size = other.size;
+		other.Head = nullptr;
+		other.size = 0;
+		cout << "LMoveAssignment:\t" << this << endl;
+		return *this;
 	}
 
 	//					Adding elements:
 	void push_front(int Data)
 	{
-		// 1. Создаем новый элемент:
-		Element* New = new Element(Data);
-		// 2. Включаем новый элемент в список:
-		New->pNext = Head;
-		// 3. Переводим голову на новый элемент
-		Head = New;
+		//// 1. Создаем новый элемент:
+		//Element* New = new Element(Data);
+		//// 2. Включаем новый элемент в список:
+		//New->pNext = Head;
+		//// 3. Переводим голову на новый элемент
+		//Head = New;
+		Head = new Element(Data, Head);
+		size++;
 	}
 	void push_back(int Data)
 	{
+		// Проверка
 		if (Head == nullptr) return push_front(Data);
 		// 1. Доходим до конца списка:
 		Element* Temp = Head;
@@ -57,111 +113,159 @@ public:
 		{
 			Temp = Temp->pNext;
 		}
-
-		// 2. Создаем новый элемент:
-		Element* New = new Element(Data);
-
-		// 3. Включаем новый элемент в список
-		Temp->pNext = New;
+		//// 2. Создаем новый элемент:
+		//Element* New = new Element(Data);
+		//// 3. Включаем новый элемент в список
+		//Temp->pNext = New;
+		Temp->pNext = new Element(Data);
+		size++;
 	}
-	void insert(int index, int Data)
+	void insert(int Data, int Index)
 	{
-
-		if (index == 0) return push_front(Data);
+		// Проверка
+		if (Index > Head->count)return;
+		if (Index == 0)return push_front(Data);
+		//1) Доходим до нужного элемента:
 		Element* Temp = Head;
-		for (int i = 0; i < index - 1; ++i)
-		{
-			if (Temp->pNext == nullptr) break;
-			Temp = Temp->pNext;
-		}
-		Element* New = new Element(Data);
-		New->pNext = Temp->pNext;
-		Temp->pNext = New;
+		for (int i = 0; i < Index - 1; i++)Temp = Temp->pNext;
+		////2) Создаем новый элемент:
+		//Element* New = new Element(Data);
+		////3) Включаем элемент в список:
+		//New->pNext = Temp->pNext;
+		//Temp->pNext = New;
+		Temp->pNext = new Element(Data, Temp->pNext);
+		size++;
 	}
 
 	//					Removing elements:
 	void pop_front()
 	{
+		// Проверка
 		if (Head == nullptr) return;
-		Element* Temp = Head;
-		Head = Head->pNext;
-		delete Temp;
+		Element* Temp = Head;	//1) Запоминаем адрес удаляемого элемента
+		Head = Head->pNext;		//2) Смещаем Голову на следующий элемент (исключаем элемент из списка)
+		delete Temp;			//3) Удаляем элемент из памяти
+		size--;
 	}
 
 	void pop_back()
 	{
-		if (Head->pNext == nullptr) return pop_front();
+		// Проверка
+		if (Head == nullptr || Head->pNext == nullptr)return pop_front();
+		//1) Доходим до предпоследнего элемента списка:
 		Element* Temp = Head;
-		while (Temp->pNext->pNext)
-		{
-			Temp = Temp->pNext;
-		}
+		while (Temp->pNext->pNext)Temp = Temp->pNext;
+		//2) Удаляем последний элемент из памяти:
 		delete Temp->pNext;
+		//3) Зануляем указатель на последний элемент:
 		Temp->pNext = nullptr;
+		size--;
 	}
 
-	void erase(int index)
+	void erase(int Index)
 	{
-		if (index == 0) return pop_front();
+		// Проверка
+		if (Index >= size)return;
+		if (Index == 0)return pop_front();
+		//1) Доходим до элемента перед удаляемым:
 		Element* Temp = Head;
-		for (int i = 0; i < index - 1; ++i)
-		{
-			if (Temp->pNext == nullptr) return;
-			Temp = Temp->pNext;
-		}
-		if (Temp->pNext == nullptr) return;
-		Element* ToDelete = Temp->pNext;
+		for (int i = 0; i < Index - 1; i++)Temp = Temp->pNext;
+		//2) Запоминаем адрес удаляемого элемента:
+		Element* erased = Temp->pNext;
+		//3) Исключаем удаляемый элемент из списка:
 		Temp->pNext = Temp->pNext->pNext;
-		delete ToDelete;
+		//4) Удаляем элемент из памяти:
+		delete erased;
+		size--;
 	}
 
 	//				Methods:
 	void print() const
 	{
 		cout << "Head:\t" << Head << endl;
-		Element* Temp = Head;	// Temp это итератор
-								// Итератор – это указатель, при помощи которого можно перебирать элементы структуры данных
-		while (Temp)
-		{
+		//Element* Temp = Head;	// Temp это итератор
+		//						// Итератор – это указатель, при помощи которого можно перебирать элементы структуры данных
+		//while (Temp)
+		//{
+		//	cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+		//	Temp = Temp->pNext; // Переход на следующий элемент
+		//}
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-			Temp = Temp->pNext; // Переход на следующий элемент
-		}
+		cout << "Количество элементов списка: " << size << endl;
+		cout << "Общее количество элементов списка: " << Element::count << endl;
+		//cout << "Общее количество элементов списка: " << Head->count << endl;
 	}
 };
+
+//#define BASE_CHECK
+//#define COUNT_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
+
+#ifdef BASE_CHECK
+	int n;
+	cout << "Введите количество элементов: "; cin >> n;
+	ForwardList list;
+	for (int i = 0; i < n; i++)
+	{
+		list.push_back(rand() % 100);
+		//list.push_front(rand() % 100);
+	}
+	list.print();
+	//list.push_back(123);
+	//list.print();
+	//list.pop_back();
+	//list.print();
+
+	int index;
+	int value;
+	cout << "Введите индекс нового элемента: "; cin >> index;
+	cout << "Введите значение нового элемента: "; cin >> value;
+	list.insert(value, index);
+	list.print();
+
+	cout << "Введите индекс удаляемого элемента: "; cin >> index;
+	list.erase(index);
+	list.print();
+#endif // BASE_CHECK
+
+#ifdef COUNT_CHECK
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
+	list1.print();
+
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+	list2.print();
+#endif // COUNT_CHECK
 
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		//list.push_back(rand() % 100);
-		list.push_front(rand() % 100);
+		list.push_back(rand() % 100);
+		//list.push_front(rand() % 100);
 	}
-	list.push_front(1234);
-	cout << "Добавление первого элемента: " << endl;
+	cout << "List filled" << endl;
 	list.print();
-	cout << delimiter << endl;
-	list.push_back(123);
-	cout << "Добавление последнего элемента: " << endl;
-	list.print();
-	cout << delimiter << endl;
-	list.pop_front();
-	cout << "Удаления первого элемента: " << endl;
-	list.print();
-	cout << delimiter << endl;
-	list.pop_back();
-	cout << "Удаления последнего элемента: " << endl;
-	list.print();
-	cout << delimiter << endl;
-	list.insert(2, 777);
-	cout << "Вставка элемента 777 на позицию 2: " << endl;
-	list.print();
-	cout << delimiter << endl;
-	list.erase(2);
-	cout << "Удаления элемента на позиции 2: " << endl;
-	list.print();
+
+	ForwardList list2 = list;	//CopyConstructor
+	//ForwardList list2;
+	//list2 = list;
+	list2.print();
+
+	ForwardList list3;
+	list3 = std::move(list2);	//MoveAssignment
+	list3.print();
+
 }
