@@ -88,7 +88,7 @@ public:
 		}
 		~Iterator()
 		{
-			cout << "IDestructor:\t" << this << endl;
+			cout << endl << "IDestructor:\t" << this << endl;
 		}
 		Iterator& operator++()
 		{
@@ -103,7 +103,6 @@ public:
 		{
 			return Temp->Data;
 		}
-		
 	};
 
 	Iterator begin() const 
