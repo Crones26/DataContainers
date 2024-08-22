@@ -13,6 +13,7 @@ class Element
 	Element* pNext; // указатель на следующий элемент
 	static int count;
 public:
+
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
@@ -44,6 +45,17 @@ public:
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
+	ForwardList(const std::initializer_list<int>& il) : ForwardList()
+	{
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
+		/*for (int val : il)
+		{
+			push_back(val);
+		}*/
+	}
 	// Конструктор копирования
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
@@ -65,16 +77,46 @@ public:
 		pop_back();
 		cout << "LDestructor:\t" << this << endl;
 	}
+	// Iterator class
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp) : Temp(Temp) {}
+		bool operator!=(const Iterator& other) const
+		{
+			return Temp != other.Temp;
+		}
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		int operator*() const
+		{
+			return Temp->Data;
+		}
+	};
 
+	Iterator begin() const 
+	{ 
+		return Iterator(Head);
+	}
+	Iterator end() const 
+	{ 
+		return Iterator(nullptr);
+	}
 	//					Operators:
 
 	// Оператор присваивания с копированием
 	ForwardList& operator=(const ForwardList& other)
 	{
 		if (this == &other) return *this;
+		if (other.size == 0) return *this;
 		while (Head) pop_front();
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
+			push_front(Temp->Data);
+		revers();
 		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
@@ -180,6 +222,19 @@ public:
 	}
 
 	//				Methods:
+	void revers()
+	{
+		ForwardList buffer;
+		while (Head)
+		{
+			buffer.push_front(Head->Data);
+			pop_front();
+		}
+		this->Head = buffer.Head;
+		this->size = buffer.size;
+		buffer.Head = nullptr;
+	}
+
 	void print() const
 	{
 		cout << "Head:\t" << Head << endl;
@@ -196,11 +251,14 @@ public:
 		cout << "Общее количество элементов списка: " << Element::count << endl;
 		//cout << "Общее количество элементов списка: " << Head->count << endl;
 	}
+
 };
 
 //#define BASE_CHECK
 //#define COUNT_CHECK
-
+//#define PERFORMANCE_CHEK
+//#define RANGE_BASE_FOR_ARRAY
+#define RANGE_BASED_FOR_LIST
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -248,24 +306,64 @@ void main()
 	list2.print();
 #endif // COUNT_CHECK
 
+#ifdef PERFORMANCE_CHEK
+
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_back(rand() % 100);
-		//list.push_front(rand() % 100);
+		//list.push_back(rand() % 100);
+		list.push_front(rand() % 100);
 	}
 	cout << "List filled" << endl;
-	list.print();
+	//list.print();
 
+	cout << "Making copy" << endl;
 	ForwardList list2 = list;	//CopyConstructor
 	//ForwardList list2;
 	//list2 = list;
-	list2.print();
+	//list2.print();
+	cout << "Copy DONE" << endl;
 
 	ForwardList list3;
 	list3 = std::move(list2);	//MoveAssignment
 	list3.print();
+
+#endif // PERFORMANCE_CHEK
+
+#ifdef RANGE_BASE_FOR_ARRAY
+	int arr[] = { 3, 5, 8, 13, 21 };
+
+	/*int n = sizeof(arr) / sizeof(arr[0]);
+	ForwardList list;
+	for (int i = 0; i < n; i++)
+	{
+		list.push_back(arr[i]);
+	}*/
+	//list.print();
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	cout << endl;
+	//Range-based for:
+	//Rage (Диапазон) в данном контексте понимается как контейнер.
+	for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+#endif // RANGE_BASE_FOR_ARRAY
+
+#ifdef RANGE_BASED_FOR_LIST
+	ForwardList list = { 3, 5, 8, 13, 21 };
+	//list.print();
+	for (int i : list)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+#endif // RANGE_BASED_FOR_LIST
 
 }
