@@ -62,7 +62,7 @@ public:
 		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);*/
 		*this = other;	//здесь просто вызываем CopyAssignment
-		cout << "LCopyConstructor:" << this << endl;
+		cout << "LCopyConstructor:\t" << this << endl;
 	}
 	// Конструктор перемещения
 	ForwardList(ForwardList&& other) noexcept : Head(other.Head), size(other.size)
@@ -82,20 +82,28 @@ public:
 	{
 		Element* Temp;
 	public:
-		Iterator(Element* Temp) : Temp(Temp) {}
-		bool operator!=(const Iterator& other) const
+		Iterator(Element* Temp) :Temp(Temp)
 		{
-			return Temp != other.Temp;
+			cout << "IConstructor:\t" << this << endl;
+		}
+		~Iterator()
+		{
+			cout << "IDestructor:\t" << this << endl;
 		}
 		Iterator& operator++()
 		{
 			Temp = Temp->pNext;
 			return *this;
 		}
-		int operator*() const
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+		int operator*()const
 		{
 			return Temp->Data;
 		}
+		
 	};
 
 	Iterator begin() const 
@@ -165,7 +173,7 @@ public:
 	void insert(int Data, int Index)
 	{
 		// Проверка
-		if (Index > Head->count)return;
+		if (Index > size)return;
 		if (Index == 0)return push_front(Data);
 		//1) Доходим до нужного элемента:
 		Element* Temp = Head;
