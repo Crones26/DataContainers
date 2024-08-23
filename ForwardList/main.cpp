@@ -30,15 +30,56 @@ public:
 #endif // DEBUG
 	}
 	friend class ForwardList;
+	friend class Iterator;
 };
 
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << endl << "ItDestructor:\t" << this << endl;
+	}
+
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+
+	int operator*()
+	{
+		return Temp->Data;
+	}
+};
 
 class ForwardList
 {
 	Element* Head;
 	unsigned int size;
 public:
+	Iterator begin() const
+	{
+		return Iterator(Head);
+	}
+	Iterator end() const
+	{
+		return Iterator(nullptr);
+	}
+
+	//					Constructors:
 	ForwardList()
 	{
 		Head = nullptr; // Когда список пуст, его голова указывает на 0
@@ -47,6 +88,11 @@ public:
 	}
 	ForwardList(const std::initializer_list<int>& il) : ForwardList()
 	{
+		//initializer_list - это контейнер.
+		//Контейнер - это объект, который организует хранение других объектов в памяти.
+		//У любого контейнера в обязательном порядке есть как минимум два метода:
+		//begin() - возвразает итератор на начало контейнера.
+		//end()   - возвращает итератор на конец контейнера.
 		for (int const* it = il.begin(); it != il.end(); it++)
 		{
 			push_back(*it);
@@ -77,42 +123,7 @@ public:
 		pop_back();
 		cout << "LDestructor:\t" << this << endl;
 	}
-	// Iterator class
-	class Iterator
-	{
-		Element* Temp;
-	public:
-		Iterator(Element* Temp) :Temp(Temp)
-		{
-			cout << "IConstructor:\t" << this << endl;
-		}
-		~Iterator()
-		{
-			cout << endl << "IDestructor:\t" << this << endl;
-		}
-		Iterator& operator++()
-		{
-			Temp = Temp->pNext;
-			return *this;
-		}
-		bool operator!=(const Iterator& other)const
-		{
-			return this->Temp != other.Temp;
-		}
-		int operator*()const
-		{
-			return Temp->Data;
-		}
-	};
-
-	Iterator begin() const 
-	{ 
-		return Iterator(Head);
-	}
-	Iterator end() const 
-	{ 
-		return Iterator(nullptr);
-	}
+	
 	//					Operators:
 
 	// Оператор присваивания с копированием
