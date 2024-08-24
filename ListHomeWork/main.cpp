@@ -141,7 +141,7 @@ public:
         return *this;
     }
 
-    //              Добавление элементов
+    //              Adding elements:
     void push_front(int Data)
     {
         Element* New = new Element(Data, Head);
@@ -149,6 +149,16 @@ public:
         Head = New;
         if (!Tail) Tail = Head;
         size++;
+
+        /*if (Head == nullptr && Tail == nullptr)
+        {
+            Head = Tail = new Element(Data);
+        }
+        else
+        {
+            Head = Head->pPrev = new Element(Data, Head);
+        }
+        size++;*/
     }
 
     void push_back(int Data)
@@ -158,6 +168,16 @@ public:
         Tail = New;
         if (!Head) Head = Tail;
         size++;
+
+        /*if (Head == nullptr && Tail == nullptr)
+        {
+            Head = Tail = new Element(Data);
+        }
+        else
+        {
+            Tail = Tail->pNext = new Element(Data, nullptr, Tail);
+        }
+        size++;*/
     }
 
     void insert(int Data, int Index)
@@ -180,7 +200,7 @@ public:
         size++;
     }
 
-    //              Удаление элементов
+    //             Removing elements:
     void pop_front()
     {
         if (!Head) return;
@@ -198,7 +218,6 @@ public:
         }
         size--;
 
-        
     }
 
     void pop_back()
