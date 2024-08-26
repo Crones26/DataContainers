@@ -74,7 +74,7 @@ public:
 	}
 	void insert(int Data, int Index)
 	{
-		if (Index > size) return;				   // Если индекс больше размера списка, выходим из метода
+		if (Index > size) return;                  // Если индекс больше размера списка, выходим из метода
 		if (Index == 0) return push_front(Data);   // Если индекс равен 0, добавляем элемент в начало списка
 		if (Index == size) return push_back(Data); // Если индекс равен размеру списка, добавляем элемент в конец
 
@@ -110,8 +110,8 @@ public:
 		}
 		else
 		{
-			Head = Head->pNext;		//1)
-			delete Head->pPrev;		//2)
+			Head = Head->pNext;     //1)
+			delete Head->pPrev;     //2)
 			Head->pPrev = nullptr;	//3) 
 		}
 		size--;
@@ -126,17 +126,17 @@ public:
 		}
 		else
 		{
-			Tail = Tail->pPrev;		//1)
-			delete Tail->pNext;		//2)
+			Tail = Tail->pPrev;     //1)
+			delete Tail->pNext;     //2)
 			Tail->pNext = nullptr;	//3)
 		}
 		size--;
 	}
 	void erase(int Index)
 	{
-		if (Index >= size) return;				 // Если индекс больше или равен размеру списка, выходим из метода
-		if (Index == 0) return pop_front();		 // Если индекс равен 0, удаляем первый элемент
-		if (Index == size - 1) return pop_back();// Если индекс равен последнему элементу, удаляем последний элемент
+		if (Index >= size) return;                // Если индекс больше или равен размеру списка, выходим из метода
+		if (Index == 0) return pop_front();       // Если индекс равен 0, удаляем первый элемент
+		if (Index == size - 1) return pop_back(); // Если индекс равен последнему элементу, удаляем последний элемент
 
 		Element* Temp;
 		if (Index < size / 2) // Если индекс ближе к началу списка
