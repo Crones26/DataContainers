@@ -50,10 +50,12 @@ public:
 		}
 		else
 		{
-			Element* New = new Element(Data); //1)
-			New->pNext = Head;                //2)
-			Head->pPrev = New;                //3)
-			Head = New;                       //4) 
+			//Element* New = new Element(Data); //1)
+			//New->pNext = Head;                //2)
+			//Head->pPrev = New;                //3)
+			//Head = New;                       //4) 
+
+			Head = Head->pPrev = new Element(Data, Head);
 		}
 		size++;
 	}
@@ -65,10 +67,12 @@ public:
 		}
 		else
 		{
-			Element* New = new Element(Data); //1)
-			New->pPrev = Tail;                //2)
-			Tail->pNext = New;                //3)
-			Tail = New;                       //4)
+			//Element* New = new Element(Data); //1)
+			//New->pPrev = Tail;                //2)
+			//Tail->pNext = New;                //3)
+			//Tail = New;                       //4)
+
+			Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		}
 		size++;
 	}
@@ -90,11 +94,13 @@ public:
 			for (int i = 0; i < size - Index - 1; i++) Temp = Temp->pPrev; // Перемещаемся к нужной позиции
 		}
 
-		Element* New = new Element(Data);    // Создаем новый элемент
-		New->pNext = Temp;                   // Устанавливаем указатель на следующий элемент для нового элемента
-		New->pPrev = Temp->pPrev;            // Устанавливаем указатель на предыдущий элемент для нового элемента
-		Temp->pPrev->pNext = New;            // Устанавливаем указатель на новый элемент у предыдущего элемента
-		Temp->pPrev = New;                   // Устанавливаем указатель на новый элемент у текущего элемента
+		//Element* New = new Element(Data);    // Создаем новый элемент
+		//New->pNext = Temp;                   // Устанавливаем указатель на следующий элемент для нового элемента
+		//New->pPrev = Temp->pPrev;            // Устанавливаем указатель на предыдущий элемент для нового элемента
+		//Temp->pPrev->pNext = New;            // Устанавливаем указатель на новый элемент у предыдущего элемента
+		//Temp->pPrev = New;                   // Устанавливаем указатель на новый элемент у текущего элемента
+
+		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
 
 		size++;     // Увеличиваем размер списка
 	}
