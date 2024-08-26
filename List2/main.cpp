@@ -1,4 +1,5 @@
-#include <iostream>
+﻿#include<iostream>
+using namespace std;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -24,7 +25,7 @@ class List
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class List;
-	}*Head, * Tail;
+	}*Head, *Tail;
 	size_t size;
 public:
 	List()
@@ -50,9 +51,9 @@ public:
 		else
 		{
 			Element* New = new Element(Data);	//1)
-			New->pNext = Head;	//2)
-			Head->pPrev = New;	//3)
-			Head = New;	//4) 
+			New->pNext = Head;					//2)
+			Head->pPrev = New;					//3)
+			Head = New;							//4) 
 		}
 		size++;
 	}
@@ -64,12 +65,38 @@ public:
 		}
 		else
 		{
-			Element* New = new Element(Data);//1)
-			New->pPrev = Tail;//2)
-			Tail->pNext = New;//3)
-			Tail = New;//4)
+			Element* New = new Element(Data);	//1)
+			New->pPrev = Tail;					//2)
+			Tail->pNext = New;					//3)
+			Tail = New;							//4)
 		}
 		size++;
+	}
+	void insert(int Data, int Index)
+	{
+		if (Index > size) return;				   // Если индекс больше размера списка, выходим из метода
+		if (Index == 0) return push_front(Data);   // Если индекс равен 0, добавляем элемент в начало списка
+		if (Index == size) return push_back(Data); // Если индекс равен размеру списка, добавляем элемент в конец
+
+		Element* Temp;
+		if (Index < size / 2) // Если индекс ближе к началу списка
+		{
+			Temp = Head;      // Начинаем с головы списка
+			for (int i = 0; i < Index; i++) Temp = Temp->pNext; // Перемещаемся к нужной позиции
+		}
+		else				 // Если индекс ближе к концу списка
+		{
+			Temp = Tail;     // Начинаем с хвоста списка
+			for (int i = 0; i < size - Index - 1; i++) Temp = Temp->pPrev; // Перемещаемся к нужной позиции
+		}
+
+		Element* New = new Element(Data);    // Создаем новый элемент
+		New->pNext = Temp;                   // Устанавливаем указатель на следующий элемент для нового элемента
+		New->pPrev = Temp->pPrev;            // Устанавливаем указатель на предыдущий элемент для нового элемента
+		Temp->pPrev->pNext = New;            // Устанавливаем указатель на новый элемент у предыдущего элемента
+		Temp->pPrev = New;                   // Устанавливаем указатель на новый элемент у текущего элемента
+
+		size++;  // Увеличиваем размер списка
 	}
 
 	//				Removing elements:
@@ -105,6 +132,31 @@ public:
 		}
 		size--;
 	}
+	void erase(int Index)
+	{
+		if (Index >= size) return;				 // Если индекс больше или равен размеру списка, выходим из метода
+		if (Index == 0) return pop_front();		 // Если индекс равен 0, удаляем первый элемент
+		if (Index == size - 1) return pop_back();// Если индекс равен последнему элементу, удаляем последний элемент
+
+		Element* Temp;
+		if (Index < size / 2) // Если индекс ближе к началу списка
+		{
+			Temp = Head;	  // Начинаем с головы списка
+			for (int i = 0; i < Index; i++) Temp = Temp->pNext; // Перемещаемся к нужной позиции
+		}
+		else				  // Если индекс ближе к концу списка
+		{
+			Temp = Tail;      // Начинаем с хвоста списка
+			for (int i = 0; i < size - Index - 1; i++) Temp = Temp->pPrev; // Перемещаемся к нужной позиции
+		}
+
+		Temp->pPrev->pNext = Temp->pNext; // Связываем предыдущий элемент с последующим
+		Temp->pNext->pPrev = Temp->pPrev; // Связываем следующий элемент с предыдущим
+
+		delete Temp; // Удаляем текущий элемент
+
+		size--;      // Уменьшаем размер списка
+	}
 
 	//				Methods:
 	void print()const
@@ -120,7 +172,7 @@ public:
 			<< Temp->pNext << endl;
 
 		cout << "Tail:\t" << Tail << endl;
-		cout << "?????????? ????????? ??????: " << size << endl;
+		cout << "Количество элементов списка: " << size << endl;
 		cout << delimiter << endl;
 	}
 	void reverse_print()const
@@ -136,7 +188,7 @@ public:
 			<< Temp->pNext << endl;
 
 		cout << "Head:\t" << Head << endl;
-		cout << "?????????? ????????? ??????: " << size << endl;
+		cout << "Количество элементов списка: " << size << endl;
 		cout << delimiter << endl;
 	}
 };
@@ -145,7 +197,7 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
-	cout << "??????? ?????????? ?????????: "; cin >> n;
+	cout << "Введите количество элементов: "; cin >> n;
 	List list;
 	for (int i = 0; i < n; i++)
 	{
@@ -154,11 +206,17 @@ void main()
 	}
 	list.print();
 	list.reverse_print();
-	for (int i = 0; i < 100; i++)list.pop_back();
-	list.reverse_print();
-}
-void main()
-{
-	setlocale(LC_ALL, "");
+	//for (int i = 0; i < 100; i++)list.pop_back();
+	//list.reverse_print();
 
+	int index;
+	int value;
+	cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	cout << "Введите значение добавляемого элемента: "; cin >> value;
+	list.insert(value, index);
+	list.print();
+
+	cout << "Введите индекс удаляемого элемента: "; cin >> index;
+	list.erase(index);
+	list.print();
 }
