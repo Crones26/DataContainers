@@ -50,10 +50,10 @@ public:
 		}
 		else
 		{
-			Element* New = new Element(Data);	//1)
-			New->pNext = Head;					//2)
-			Head->pPrev = New;					//3)
-			Head = New;							//4) 
+			Element* New = new Element(Data); //1)
+			New->pNext = Head;                //2)
+			Head->pPrev = New;                //3)
+			Head = New;                       //4) 
 		}
 		size++;
 	}
@@ -65,10 +65,10 @@ public:
 		}
 		else
 		{
-			Element* New = new Element(Data);	//1)
-			New->pPrev = Tail;					//2)
-			Tail->pNext = New;					//3)
-			Tail = New;							//4)
+			Element* New = new Element(Data); //1)
+			New->pPrev = Tail;                //2)
+			Tail->pNext = New;                //3)
+			Tail = New;                       //4)
 		}
 		size++;
 	}
@@ -84,9 +84,9 @@ public:
 			Temp = Head;      // Начинаем с головы списка
 			for (int i = 0; i < Index; i++) Temp = Temp->pNext; // Перемещаемся к нужной позиции
 		}
-		else				 // Если индекс ближе к концу списка
+		else                  // Если индекс ближе к концу списка
 		{
-			Temp = Tail;     // Начинаем с хвоста списка
+			Temp = Tail;      // Начинаем с хвоста списка
 			for (int i = 0; i < size - Index - 1; i++) Temp = Temp->pPrev; // Перемещаемся к нужной позиции
 		}
 
@@ -96,7 +96,7 @@ public:
 		Temp->pPrev->pNext = New;            // Устанавливаем указатель на новый элемент у предыдущего элемента
 		Temp->pPrev = New;                   // Устанавливаем указатель на новый элемент у текущего элемента
 
-		size++;  // Увеличиваем размер списка
+		size++;     // Увеличиваем размер списка
 	}
 
 	//				Removing elements:
@@ -141,10 +141,10 @@ public:
 		Element* Temp;
 		if (Index < size / 2) // Если индекс ближе к началу списка
 		{
-			Temp = Head;	  // Начинаем с головы списка
+			Temp = Head;      // Начинаем с головы списка
 			for (int i = 0; i < Index; i++) Temp = Temp->pNext; // Перемещаемся к нужной позиции
 		}
-		else				  // Если индекс ближе к концу списка
+		else                  // Если индекс ближе к концу списка
 		{
 			Temp = Tail;      // Начинаем с хвоста списка
 			for (int i = 0; i < size - Index - 1; i++) Temp = Temp->pPrev; // Перемещаемся к нужной позиции
@@ -219,4 +219,5 @@ void main()
 	cout << "Введите индекс удаляемого элемента: "; cin >> index;
 	list.erase(index);
 	list.print();
+
 }
