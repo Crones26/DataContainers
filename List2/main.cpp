@@ -11,37 +11,215 @@ class List
 {
 	class Element
 	{
-		int Data;
-		Element* pNext;
-		Element* pPrev;
+		int Data;		//значение элемента
+		Element* pNext;	//указатель на следующий элемент
+		Element* pPrev;	//указатель на предыдущий элемент
 	public:
 		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
 			:Data(Data), pNext(pNext), pPrev(pPrev)
 		{
-			cout << "EConstructor:\t" << this << endl;
+			//cout << "EConstructor:\t" << this << endl;
 		}
 		~Element()
 		{
-			cout << "EDestructor:\t" << this << endl;
+			//cout << "EDestructor:\t" << this << endl;
 		}
 		friend class List;
-	}*Head, *Tail;
+	}*Head, * Tail;
 	size_t size;
 public:
-	List()
+	class Iterator
 	{
-		Head = Tail = nullptr;
-		size = 0;
+		Element* Temp;
+	public:
+		Iterator(Element* Temp = nullptr) :Temp(Temp)
+		{
+			//cout << "ItConstructor:\t" << this << endl;
+		}
+		~Iterator()
+		{
+			//cout << "ItDestructor:\t" << this << endl;
+		}
+
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		Iterator operator++(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+		Iterator& operator--()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		Iterator operator--(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+
+		//				Comparison operators:
+		bool operator==(const Iterator& other) const
+		{
+			return this->Temp == other.Temp;
+		}
+
+		bool operator!=(const Iterator& other) const
+		{
+			return this->Temp != other.Temp;
+		}
+
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+
+		Element* operator->()
+		{
+			return Temp;
+		}
+	};
+	
+	class ReverseIterator
+	{
+		Element* Temp;
+	public:
+		ReverseIterator(Element* Temp = nullptr) :Temp(Temp)
+		{
+			cout << "RItConstructor:\t" << this << endl;
+		}
+		~ReverseIterator()
+		{
+			cout << "RItDestructor:\t" << this << endl;
+		}
+
+		//				Increment/Decrement:
+		ReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ReverseIterator operator++(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		ReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		ReverseIterator operator--(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+
+		//				Comparison operators:
+		bool operator==(const ReverseIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const ReverseIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+
+		//				Dereference operators:
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
+	const Iterator begin()const
+	{ 
+		return Head;
+	}
+	Iterator begin()
+	{
+		return Head;
+	}
+
+	const Iterator end()const
+	{
+		return nullptr;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
+
+	const ReverseIterator rbegin()const
+	{
+		return Tail;
+	}
+	ReverseIterator rbegin()
+	{
+		return Tail;
+	}
+
+	const ReverseIterator rend()const
+	{
+		return nullptr;
+	}
+	ReverseIterator rend()
+	{
+		return nullptr;
+	}
+
+	List() : Head(nullptr), Tail(nullptr), size(0)
+	{
 		cout << "LConstructor:\t" << this << endl;
 	}
+
+	List(const std::initializer_list<int>& il) :List()
+	{
+		for (int const* it = il.begin(); it != il.end(); ++it)
+		{
+			push_back(*it);
+		}
+	}
+	List(const List& other) :List()
+	{
+		*this = other;
+		cout << "CopyConstructor:" << this << endl;
+	}
+
 	~List()
 	{
-		//while (Head)pop_front();
-		while (Tail)pop_back();
+		while (Tail) pop_back();
 		cout << "LDestructor:\t" << this << endl;
 	}
 
-	//				Adding elements:
+	//						Operators:
+	List& operator=(const List& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)push_back(Temp->Data);
+		cout << "CopyAssignment:\t" << this << endl;
+		return *this;
+	}
+
+	//						Adding elements:
 	void push_front(int Data)
 	{
 		if (Head == nullptr && Tail == nullptr)
@@ -59,6 +237,7 @@ public:
 		}
 		size++;
 	}
+
 	void push_back(int Data)
 	{
 		if (Head == nullptr && Tail == nullptr)
@@ -76,6 +255,7 @@ public:
 		}
 		size++;
 	}
+
 	void insert(int Data, int Index)
 	{
 		if (Index > size) return;                  // Если индекс больше размера списка, выходим из метода
@@ -105,7 +285,7 @@ public:
 		size++;     // Увеличиваем размер списка
 	}
 
-	//				Removing elements:
+	//					Removing elements:
 	void pop_front()
 	{
 		if (Head == nullptr && Tail == nullptr)return;
@@ -116,12 +296,13 @@ public:
 		}
 		else
 		{
-			Head = Head->pNext;     //1)
-			delete Head->pPrev;     //2)
-			Head->pPrev = nullptr;	//3) 
+			Head = Head->pNext;
+			delete Head->pPrev;
+			Head->pPrev = nullptr;
 		}
 		size--;
 	}
+
 	void pop_back()
 	{
 		if (Head == nullptr && Tail == nullptr)return;
@@ -132,12 +313,13 @@ public:
 		}
 		else
 		{
-			Tail = Tail->pPrev;     //1)
-			delete Tail->pNext;     //2)
-			Tail->pNext = nullptr;	//3)
+			Tail = Tail->pPrev;
+			delete Tail->pNext;
+			Tail->pNext = nullptr;
 		}
 		size--;
 	}
+
 	void erase(int Index)
 	{
 		if (Index >= size) return;                // Если индекс больше или равен размеру списка, выходим из метода
@@ -164,8 +346,8 @@ public:
 		size--;      // Уменьшаем размер списка
 	}
 
-	//				Methods:
-	void print()const
+	//					Methods:
+	void print() const
 	{
 		cout << delimiter << endl;
 		cout << "Head:\t" << Head << endl;
@@ -181,7 +363,8 @@ public:
 		cout << "Количество элементов списка: " << size << endl;
 		cout << delimiter << endl;
 	}
-	void reverse_print()const
+
+	void reverse_print() const
 	{
 		cout << delimiter << endl;
 		cout << "Tail:\t" << Tail << endl;
@@ -198,10 +381,24 @@ public:
 		cout << delimiter << endl;
 	}
 };
+List operator+(const List& left, const List& right)
+{
+	List buffer = left;
+	for (List::Iterator it = right.begin(); it != right.end(); ++it)
+	{
+		buffer.push_back(*it);
+	}
+	return buffer;
+}
+
+//#define BASE_CHECK
+//#define ITERATORS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
+
+#ifdef BASE_CHEK
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
 	List list;
@@ -225,5 +422,25 @@ void main()
 	cout << "Введите индекс удаляемого элемента: "; cin >> index;
 	list.erase(index);
 	list.print();
+#endif // BASE_CHEK
+
+#ifdef ITERATORS_CHECK
+	List list = { 3,5,8,13,21 };
+	//list.print();
+	//list.reverse_print();
+	for (int i : list)cout << i << tab; cout << endl;
+
+	for (List::ReverseIterator it = list.rbegin(); it != list.rend(); ++it)
+	{
+		cout << *it << tab;
+	}
+#endif // ITERATORS_CHECK
+
+	List list1 = { 3, 5, 8, 13, 21 };
+	List list2 = { 34, 55, 89 };
+	List list3 = list1 + list2;
+	list1.print();
+	list2.print();
+	list3.print();
 
 }
