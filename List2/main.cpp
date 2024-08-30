@@ -53,8 +53,6 @@ class List
 		}
 	};
 
-
-
 public:
 	class ConstIterator :public ConstBaseIterator
 	{
