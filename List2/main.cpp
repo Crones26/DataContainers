@@ -53,6 +53,8 @@ class List
 		}
 	};
 
+
+
 public:
 	class ConstIterator :public ConstBaseIterator
 	{
@@ -128,38 +130,59 @@ public:
 		}
 	};
 
-	const ConstIterator begin()const
-	{ 
+	class Iterator :public ConstIterator
+	{
+	public:
+		Iterator(Element* Temp = nullptr) :ConstIterator(Temp) {}
+		~Iterator() {}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+	class ReverseIterator :public ConstReverseIterator
+	{
+	public:
+		ReverseIterator(Element* Temp = nullptr) :ConstReverseIterator(Temp) {}
+		~ReverseIterator() {}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
+	ConstIterator begin()const
+	{
 		return Head;
 	}
-	ConstIterator begin()
+	Iterator begin()
 	{
 		return Head;
 	}
 
-	const ConstIterator end()const
+	ConstIterator end()const
 	{
 		return nullptr;
 	}
-	ConstIterator end()
+	Iterator end()
 	{
 		return nullptr;
 	}
 
-	const ConstReverseIterator rbegin()const
+	ConstReverseIterator rbegin()const
 	{
 		return Tail;
 	}
-	ConstReverseIterator rbegin()
+	ReverseIterator rbegin()
 	{
 		return Tail;
 	}
 
-	const ConstReverseIterator rend()const
+	ConstReverseIterator rend()const
 	{
 		return nullptr;
 	}
-	ConstReverseIterator rend()
+	ReverseIterator rend()
 	{
 		return nullptr;
 	}
@@ -427,5 +450,5 @@ void main()
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
-
+	
 }

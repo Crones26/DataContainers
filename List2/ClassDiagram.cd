@@ -1,14 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="List">
-    <Position X="0.5" Y="0.5" Width="2.75" />
+    <Position X="0.5" Y="0.5" Width="3.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Class Name="List::Element" Collapsed="true">
+      <Class Name="List::Element">
+        <TypeIdentifier>
+          <NewMemberFileName>main.cpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="List::ConstBaseIterator">
         <TypeIdentifier>
           <NewMemberFileName>main.cpp</NewMemberFileName>
         </TypeIdentifier>
@@ -23,9 +28,19 @@
           <NewMemberFileName>main.cpp</NewMemberFileName>
         </TypeIdentifier>
       </Class>
+      <Class Name="List::Iterator">
+        <TypeIdentifier>
+          <NewMemberFileName>main.cpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="List::ReverseIterator">
+        <TypeIdentifier>
+          <NewMemberFileName>main.cpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAQAACACAABAgIAAgKEIAAAQAAAAAAAAAAEiACBEAAI=</HashCode>
+      <HashCode>AAQAACACAABAgIAAgKEIAAAQAAAAAAAAAAEiACAEAAI=</HashCode>
       <FileName>main.cpp</FileName>
     </TypeIdentifier>
   </Class>
