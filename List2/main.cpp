@@ -491,11 +491,11 @@ void main()
 		cout << *it << tab; cout << endl;
 	cout << delimiter << endl;
 
-	/*List<std::string> string_list1 = { "Hello", "World","Templates" };
-	List<std::string> string_list2 = {"Powerful", "DONE"};
-	List<std::string> string_list3 = string_list1 + string_list2;
-	for (const std::string& s : string_list3) cout << s << tab;
-	cout << endl;*/
+	List<std::string> s_list1 = { "Hello", "World","Templates" };
+	List<std::string> s_list2 = {"Powerful", "DONE"};
+	List<std::string> s_list3 = s_list1 + s_list2;
+	for (const std::string& s : s_list3) cout << s << tab;
+	cout << endl;
 #endif // STD_STRING_CHEK
 
 }
