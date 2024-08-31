@@ -400,7 +400,7 @@ void Grow(List& list)
 
 //#define BASE_CHECK
 //#define ITERATORS_CHECK
-
+//#define OPERATOR_PLUS_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -443,6 +443,8 @@ void main()
 	}
 #endif // ITERATORS_CHECK
 
+#ifdef OPERATOR_PLUS_CHECK
+
 	List list1 = { 3, 5, 8, 13, 21 };
 	List list2 = { 34, 55, 89 };
 	List list3 = list1 + list2;
@@ -456,5 +458,8 @@ void main()
 	for (int i : list3)cout << i << tab; cout << endl;
 	Grow(list3);
 	for (int i : list3)cout << i << tab; cout << endl;
+
+#endif // OPERATOR_PLUS_CHECK
+
 
 }
