@@ -59,11 +59,11 @@ public:
 	public:
 		ConstIterator(Element* Temp = nullptr) :ConstBaseIterator(Temp)
 		{
-			cout << "ItConstructor:\t" << this << endl;
+			cout << "CItConstructor:\t" << this << endl;
 		}
 		~ConstIterator()
 		{
-			cout << "ItDestructor:\t" << this << endl;
+			cout << "CItDestructor:\t" << this << endl;
 		}
 
 		//				Increment/Decrement:
@@ -96,11 +96,11 @@ public:
 	public:
 		ConstReverseIterator(Element* Temp = nullptr) :ConstBaseIterator(Temp)
 		{
-			cout << "RItConstructor:\t" << this << endl;
+			cout << "CRevItConstructor:\t" << this << endl;
 		}
 		~ConstReverseIterator()
 		{
-			cout << "RItDestructor:\t" << this << endl;
+			cout << "CRevItDestructor:\t" << this << endl;
 		}
 
 		//				Incremento/Decremento:
@@ -392,6 +392,12 @@ List operator+(const List& left, const List& right)
 	return buffer;
 }
 
+void Grow(List& list)
+{
+	for (List::Iterator it = list.begin(); it != list.end(); ++it)
+		*it *= 10;
+}
+
 //#define BASE_CHECK
 //#define ITERATORS_CHECK
 
@@ -448,5 +454,7 @@ void main()
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
-	
+	Grow(list3);
+	for (int i : list3)cout << i << tab; cout << endl;
+
 }
