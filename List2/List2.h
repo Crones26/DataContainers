@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include<iostream>
 #include<string>
 #include<iostream>
@@ -14,9 +14,9 @@ class List
 {
 	class Element
 	{
-		T Data;			//значение элемента
-		Element* pNext;	//указатель на следующий элемент
-		Element* pPrev;	//указатель на предыдущий элемент
+		T Data;			//Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°
+		Element* pNext;	//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚
+		Element* pPrev;	//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїСЂРµРґС‹РґСѓС‰РёР№ СЌР»РµРјРµРЅС‚
 	public:
 		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr);
 		~Element();
