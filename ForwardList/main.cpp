@@ -21,12 +21,12 @@ public:
 	Element(T Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
-		//cout << "EConstructor:\t" << this << endl;
+		cout << "EConstructor:\t" << this << endl;
 	}
 	~Element()
 	{
 		count--;
-		//cout << "EDestructor:\t" << this << endl;
+		cout << "EDestructor:\t" << this << endl;
 	}
 	friend class ForwardList<T>;
 	friend class Iterator<T>;
@@ -304,8 +304,8 @@ void main()
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_back(rand() % 100);
-		//list.push_front(rand() % 100);
+		//list.push_back(rand() % 100);
+		list.push_front(rand() % 100);
 	}
 	list.print();
 	//list.push_back(123);
