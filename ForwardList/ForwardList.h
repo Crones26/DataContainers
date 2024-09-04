@@ -6,6 +6,7 @@ using std::cin;
 using std::endl;
 
 #define tab "\t"
+#define delimiter "---------------------------------------------------------------------------------"
 
 template<typename T> class ForwardList
 {
