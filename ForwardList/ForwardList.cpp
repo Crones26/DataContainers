@@ -1,4 +1,4 @@
-#include "ForwardList.h"
+ï»¿#include "ForwardList.h"
 
 template<typename T> int ForwardList<T>::Element::count = 0;
 
@@ -199,8 +199,8 @@ template<typename T> void ForwardList<T>::print()const
 
 	for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 		cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-	cout << "Êîëè÷åñòâî ýëåìåíòîâ ñïèñêà: " << size << endl;
-	cout << "Îáùåå êîëè÷åñòâî ýëåìåíòîâ ñïèñêà: " << Element<T>::count << endl;
+	cout << "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² ÑÐ¿Ð¸ÑÐºÐ°: " << size << endl;
+	cout << "ÐžÐ±Ñ‰ÐµÐµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² ÑÐ¿Ð¸ÑÐºÐ°: " << Element<T>::count << endl;
 }
 
 

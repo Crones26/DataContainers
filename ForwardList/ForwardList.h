@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 using namespace std;
 using std::cout;
@@ -13,8 +13,8 @@ template<typename T> class ForwardList
 	class Element
 	{
 		T Data;
-		Element* pNext;      // значение элемента
-		static int count;    // указатель на следующий элемент
+		Element* pNext;      // Р·РЅР°С‡РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°
+		static int count;    // СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚
 	public:
 		Element(T Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 		{
