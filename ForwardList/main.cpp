@@ -31,6 +31,7 @@ public:
 	}
 	friend class ForwardList;
 	friend class Iterator;
+	friend class Stack;
 };
 
 int Element::count = 0;
@@ -41,11 +42,17 @@ class Iterator
 public:
 	Iterator(Element* Temp = nullptr) :Temp(Temp)
 	{
+#ifdef DEBUG
 		cout << "ItConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	~Iterator()
 	{
+#ifdef DEBUG
 		cout << endl << "ItDestructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 
 	Iterator& operator++()
@@ -67,6 +74,7 @@ public:
 
 class ForwardList
 {
+protected:
 	Element* Head;
 	unsigned int size;
 public:
@@ -84,7 +92,10 @@ public:
 	{
 		Head = nullptr; // Когда список пуст, его голова указывает на 0
 		size = 0;
+#ifdef DEBUG
 		cout << "LConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	ForwardList(const std::initializer_list<int>& il) : ForwardList()
 	{
@@ -108,20 +119,28 @@ public:
 		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);*/
 		*this = other;	//здесь просто вызываем CopyAssignment
+#ifdef DEBUG
 		cout << "LCopyConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	// Конструктор перемещения
 	ForwardList(ForwardList&& other) noexcept : Head(other.Head), size(other.size)
 	{
 		other.Head = nullptr;
 		other.size = 0;
+#ifdef DEBUG
 		cout << "LMoveConstructor:\t" << this << endl;
+#endif // DEBUG
 	}
 	~ForwardList()
 	{
 		while (Head) pop_front();
 		pop_back();
+#ifdef DEBUG
 		cout << "LDestructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	
 	//					Operators:
@@ -135,7 +154,9 @@ public:
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_front(Temp->Data);
 		revers();
+#ifdef DEBUG
 		cout << "LCopyAssignment:\t" << this << endl;
+#endif // DEBUG	
 		return *this;
 	}
 	// Оператор присваивания с перемещением
@@ -269,14 +290,79 @@ public:
 		cout << "Общее количество элементов списка: " << Element::count << endl;
 		//cout << "Общее количество элементов списка: " << Head->count << endl;
 	}
-
 };
+class Stack:ForwardList
+{
+
+public:
+	const int& top()const
+	{
+		return Head->Data;
+	}
+	int& top() // Позволяет изменить вершину стека
+	{
+		return Head->Data;
+	}
+	int push(int Data)
+	{
+		push_front(Data);
+		return Head->Data;
+	}
+	int pop()
+	{
+		int Data = Head->Data;
+		pop_front();
+		return Data;
+	}
+	int size()const
+	{
+		return ForwardList::size;
+	}
+	bool empty()const
+	{
+		return Head == nullptr;
+	}
+	void swap(Stack& other)
+	{
+		Element* bufferHead = this->Head;
+		this->Head = other.Head;
+		other.Head = bufferHead;
+
+		int bufferSize = this->size();
+		this->ForwardList::size = other.size();
+		other.ForwardList::size = bufferSize;
+	}
+	void info()const
+	{
+		cout << delimiter << endl;
+		cout << this << ":\n";
+		cout << "Size: " << size() << endl;
+		for (int i : ForwardList(*this)) cout << i << tab; cout << endl;
+		cout << delimiter << endl;
+	}
+};
+
+void Print(int arr[])
+{
+	cout << typeid(arr).name() << endl;
+	cout << sizeof(arr) << endl;
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	cout << endl;
+	/*for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;*/
+}
 
 //#define BASE_CHECK
 //#define COUNT_CHECK
 //#define PERFORMANCE_CHEK
 //#define RANGE_BASE_FOR_ARRAY
-#define RANGE_BASED_FOR_LIST
+//#define RANGE_BASED_FOR_LIST
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -383,5 +469,30 @@ void main()
 	}
 	cout << endl;
 #endif // RANGE_BASED_FOR_LIST
+
+	Stack stack;
+	stack.push(3);
+	stack.push(5);
+	stack.push(8);
+	stack.push(13);
+	stack.push(21);
+	cout << stack.size() << endl;
+	/*while (!stack.empty())
+	{
+		cout << stack.pop() << tab;
+	}
+	cout << endl;*/
+	Stack stack2;
+	stack2.push(34);
+	stack2.push(55);
+	stack2.push(89);
+
+	stack.info();
+	stack2.info();
+
+	stack.swap(stack2);
+
+	stack.info();
+	stack2.info();
 
 }
